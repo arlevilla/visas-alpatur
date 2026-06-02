@@ -99,7 +99,7 @@
     </div>
     <div class="progress-bar"><div class="progress-fill" id="prog" style="width:11.1%"></div></div>
     <div class="progress-labels">
-      <span id="step-label">Sección 1 de 9</span>
+      <span id="step-label">Sección 1 de 11</span>
       <span id="step-name">Datos personales</span>
     </div>
   </div>
@@ -109,8 +109,24 @@
   <div class="card">
     <div id="sections">
 
+      <!-- S0: BIENVENIDA -->
+      <div class="section active" data-name="Antes de empezar">
+        <div class="section-title"><i class="ti ti-checklist"></i> Antes de empezar</div>
+        <div class="info-box" style="background:#fff3ee; color:#c0522a; border-left:3px solid var(--terracota);"><i class="ti ti-alert-triangle"></i> Este formulario nos ayuda a reunir tus datos para gestionar tu visa. Completá solo lo que sabés — cualquier duda te la consultamos directamente.</div>
+        <div class="foto-box" style="margin-bottom:1rem;">
+          <h3 style="margin-bottom:0.75rem;">📋 Tené a mano antes de completar</h3>
+          <ul>
+            <li style="margin-bottom:8px;"><strong>📘 Pasaporte vigente</strong> — que no esté vencido. Sin pasaporte válido no se puede iniciar el trámite.</li>
+            <li style="margin-bottom:8px;"><strong>📋 Visa anterior</strong> — si ya tuviste una visa americana u otra visa, tené los datos a mano o una foto de ella.</li>
+            <li><strong>📸 Foto tipo carnet reciente</strong> — al final del formulario encontrás todos los requisitos que debe cumplir.</li>
+          </ul>
+        </div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> En cualquier momento que tengas dudas, no avances — consultanos antes de continuar. Podés escribirnos por WhatsApp.</div>
+        <div style="text-align:center; margin-top:1.25rem; font-size:13px; color:var(--text-muted);">Cuando estés listo/a, tocá <strong>Siguiente →</strong></div>
+      </div>
+
       <!-- S1: DATOS PERSONALES -->
-      <div class="section active" data-name="Datos personales">
+      <div class="section" data-name="Datos personales">
         <div class="section-title"><i class="ti ti-user"></i> Datos personales</div>
         <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
         <div class="info-box"><i class="ti ti-info-circle"></i> Escribí los datos tal como aparecen en el pasaporte.</div>
@@ -226,33 +242,6 @@
         </div>
         <div class="field"><label>¿Alguna vez perdió o le robaron un pasaporte?</label>
           <select id="pas_perdido"><option value="">— elegir —</option><option>No</option><option>Sí</option></select>
-        </div>
-      </div>
-
-      <!-- S5: FOTO -->
-      <div class="section" data-name="Foto para la visa">
-        <div class="section-title"><i class="ti ti-camera"></i> Foto para la visa</div>
-        <div class="consulta-box"><i class="ti ti-message-circle"></i> Esta sección es informativa. Leela antes de sacar tu foto.</div>
-        <div class="foto-box">
-          <h3>Requisitos oficiales de la foto</h3>
-          <ul>
-            <li>En color, tomada en los últimos 6 meses</li>
-            <li>Fondo blanco liso o blanquecino</li>
-            <li>De frente, mirando directamente a la cámara</li>
-            <li>Expresión facial neutra, ambos ojos abiertos</li>
-            <li>Sin sombrero ni cobertura para la cabeza (salvo motivos religiosos cotidianos)</li>
-            <li>Sin auriculares ni dispositivos manos libres</li>
-            <li>Sin anteojos (salvo prescripción médica certificada)</li>
-            <li>Con ropa de uso diario, sin uniformes</li>
-            <li>La cabeza debe ocupar entre el 50% y el 69% de la altura total de la imagen</li>
-          </ul>
-        </div>
-        <div class="foto-estudios">
-          <p class="titulo">Estudios fotográficos sugeridos</p>
-          <p class="pedido">Al sacar la foto solicitá: <strong>copia digital enviada a tu correo</strong> + <strong>foto impresa</strong> para presentar en la embajada.</p>
-          <div class="estudio-item">📍 Magicolor <span>— Ciudad del Este</span></div>
-          <div class="estudio-item">📍 Rochester <span>— Asunción</span></div>
-          <p class="disclaimer">⚠️ Estas sugerencias no son publicidad ni representan ningún acuerdo comercial con ALPATUR Viajes. Son estudios con los que sabemos que trabajan bien para fotos de visa.</p>
         </div>
       </div>
 
@@ -421,6 +410,33 @@
         </div>
         <div class="conditional" id="cond_viajes">
           <div class="field"><label>Países visitados</label><input type="text" id="paises" placeholder="Argentina, Brasil, Chile..."></div>
+        </div>
+      </div>
+
+      <!-- S10: FOTO -->
+      <div class="section" data-name="Foto para la visa">
+        <div class="section-title"><i class="ti ti-camera"></i> Foto para la visa</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Esta sección es informativa. Leela antes de sacar tu foto.</div>
+        <div class="foto-box">
+          <h3>Requisitos oficiales de la foto</h3>
+          <ul>
+            <li>En color, tomada en los últimos 6 meses</li>
+            <li>Fondo blanco liso o blanquecino</li>
+            <li>De frente, mirando directamente a la cámara</li>
+            <li>Expresión facial neutra, ambos ojos abiertos</li>
+            <li>Sin sombrero ni cobertura para la cabeza (salvo motivos religiosos cotidianos)</li>
+            <li>Sin auriculares ni dispositivos manos libres</li>
+            <li>Sin anteojos (salvo prescripción médica certificada)</li>
+            <li>Con ropa de uso diario, sin uniformes</li>
+            <li>La cabeza debe ocupar entre el 50% y el 69% de la altura total de la imagen</li>
+          </ul>
+        </div>
+        <div class="foto-estudios">
+          <p class="titulo">Estudios fotográficos sugeridos</p>
+          <p class="pedido">Al sacar la foto solicitá: <strong>copia digital enviada a tu correo</strong> + <strong>foto impresa</strong> para presentar en la embajada.</p>
+          <div class="estudio-item">📍 Magicolor <span>— Ciudad del Este</span></div>
+          <div class="estudio-item">📍 Rochester <span>— Asunción</span></div>
+          <p class="disclaimer">⚠️ Estas sugerencias no son publicidad ni representan ningún acuerdo comercial con ALPATUR Viajes. Son estudios con los que sabemos que trabajan bien para fotos de visa.</p>
         </div>
       </div>
 
