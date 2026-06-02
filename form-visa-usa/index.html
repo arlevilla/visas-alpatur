@@ -1,1 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Formulario Visa Americana — ALPATUR Viajes</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
+<style>
+  :root {
+    --terracota: #E76F51;
+    --oceanico: #264653;
+    --terracota-light: #FAECE7;
+    --oceanico-light: #EAF2F4;
+    --text: #1a1a1a;
+    --text-muted: #555;
+    --text-hint: #888;
+    --border: #ddd;
+    --bg: #ffffff;
+    --bg-secondary: #f7f7f7;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background: #f0f2f5; min-height: 100vh; padding: 1rem; }
+  .wrapper { max-width: 500px; margin: 0 auto; }
+  .header { background: var(--oceanico); color: white; border-radius: 14px; padding: 1.25rem 1.25rem 1rem; margin-bottom: 1rem; }
+  .header-top { display: flex; align-items: center; gap: 12px; margin-bottom: 0.75rem; }
+  .logo-circle { width: 36px; height: 36px; border-radius: 50%; background: var(--terracota); display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; color: white; flex-shrink: 0; }
+  .header h1 { font-size: 15px; font-weight: 600; }
+  .header p { font-size: 12px; opacity: 0.7; margin-top: 2px; }
+  .progress-bar { height: 5px; background: rgba(255,255,255,0.2); border-radius: 3px; margin-top: 12px; }
+  .progress-fill { height: 5px; background: var(--terracota); border-radius: 3px; transition: width 0.4s ease; }
+  .progress-labels { display: flex; justify-content: space-between; margin-top: 6px; }
+  .progress-labels span { font-size: 11px; opacity: 0.65; }
+  .dots { display: flex; gap: 7px; justify-content: center; flex-wrap: wrap; padding: 0.5rem 0; }
+  .dot { width: 9px; height: 9px; border-radius: 50%; background: #ccc; cursor: pointer; transition: all 0.2s; border: none; }
+  .dot.done { background: var(--oceanico); }
+  .dot.active { background: var(--terracota); transform: scale(1.4); }
+  .card { background: var(--bg); border-radius: 14px; padding: 1.25rem; margin-bottom: 0.75rem; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .section { display: none; }
+  .section.active { display: block; }
+  .section-title { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; color: var(--terracota); margin-bottom: 0.75rem; }
+  .section-title i { font-size: 16px; }
+  .consulta-box { background: var(--oceanico-light); border-radius: 10px; padding: 0.65rem 1rem; font-size: 12px; color: var(--oceanico); margin-bottom: 1rem; display: flex; gap: 8px; align-items: center; border-left: 3px solid var(--oceanico); }
+  .consulta-box i { font-size: 15px; flex-shrink: 0; }
+  .field { margin-bottom: 1rem; }
+  .field label { display: block; font-size: 13px; color: var(--text-muted); margin-bottom: 5px; }
+  .field input, .field select, .field textarea { width: 100%; font-size: 14px; padding: 10px 12px; border: 1.5px solid var(--border); border-radius: 10px; background: var(--bg); color: var(--text); -webkit-appearance: none; appearance: none; transition: border-color 0.15s; }
+  .field input:focus, .field select:focus, .field textarea:focus { outline: none; border-color: var(--terracota); }
+  .field textarea { resize: vertical; min-height: 80px; }
+  .row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+  .hint { font-size: 11px; color: var(--text-hint); margin-top: 4px; font-style: italic; }
+  .divider { border: none; border-top: 1px solid #eee; margin: 1.1rem 0; }
+  .toggle-wrap { display: flex; align-items: center; gap: 10px; margin-bottom: 0.75rem; cursor: pointer; }
+  .toggle-wrap input[type="checkbox"] { width: 18px; height: 18px; cursor: pointer; accent-color: var(--terracota); flex-shrink: 0; }
+  .toggle-wrap label { font-size: 13px; color: var(--text-muted); cursor: pointer; line-height: 1.4; }
+  .conditional { display: none; padding: 1rem 1rem 0.25rem; border-left: 3px solid var(--terracota); margin-bottom: 0.75rem; background: var(--terracota-light); border-radius: 0 10px 10px 0; }
+  .conditional.visible { display: block; }
+  .repeatable-item { background: var(--bg); border-radius: 10px; padding: 1rem; margin-bottom: 0.75rem; border: 1px solid #e8e8e8; position: relative; }
+  .remove-btn { position: absolute; top: 8px; right: 8px; background: none; border: none; color: var(--text-hint); cursor: pointer; font-size: 18px; padding: 2px; line-height: 1; }
+  .remove-btn:hover { color: var(--terracota); }
+  .add-btn { display: flex; align-items: center; gap: 6px; background: none; border: 1.5px dashed var(--terracota); color: var(--terracota); border-radius: 10px; padding: 9px 14px; font-size: 13px; cursor: pointer; width: 100%; justify-content: center; margin-top: 0.5rem; font-weight: 500; }
+  .add-btn:hover { background: var(--terracota-light); }
+  .nav { display: flex; gap: 10px; margin-top: 0.5rem; }
+  .btn { flex: 1; padding: 13px; border-radius: 10px; font-size: 15px; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: var(--bg); color: var(--text); transition: all 0.15s; }
+  .btn:disabled { opacity: 0.3; cursor: default; }
+  .btn-primary { background: var(--terracota); color: white; border-color: var(--terracota); }
+  .btn-primary:hover { opacity: 0.92; }
+  .info-box { background: var(--oceanico-light); border-radius: 10px; padding: 0.75rem 1rem; font-size: 13px; color: var(--oceanico); margin-bottom: 1rem; display: flex; gap: 8px; align-items: flex-start; }
+  .info-box i { font-size: 16px; flex-shrink: 0; margin-top: 1px; }
+  .footer-note { text-align: center; font-size: 11px; color: var(--text-hint); margin-top: 0.75rem; padding-bottom: 1rem; line-height: 1.6; }
+  .success { text-align: center; padding: 2.5rem 1rem; }
+  .success i { font-size: 56px; color: var(--terracota); }
+  .success h2 { font-size: 20px; font-weight: 600; margin: 1rem 0 0.5rem; color: var(--text); }
+  .success p { font-size: 14px; color: var(--text-muted); line-height: 1.6; }
+  .badge-skip { font-size: 11px; background: var(--bg-secondary); color: var(--text-hint); padding: 3px 8px; border-radius: 20px; margin-left: 6px; font-weight: 400; }
+  .foto-box { background: var(--bg-secondary); border-radius: 10px; padding: 1rem; margin-bottom: 1rem; }
+  .foto-box h3 { font-size: 13px; font-weight: 600; color: var(--text); margin-bottom: 0.6rem; }
+  .foto-box ul { padding-left: 1.2rem; }
+  .foto-box ul li { font-size: 12px; color: var(--text-muted); margin-bottom: 5px; line-height: 1.5; }
+  .foto-estudios { background: #fff8f6; border: 1px solid #f0d0c4; border-radius: 10px; padding: 0.85rem 1rem; margin-bottom: 1rem; }
+  .foto-estudios .titulo { font-size: 13px; color: var(--text); font-weight: 600; margin-bottom: 0.5rem; }
+  .foto-estudios .pedido { font-size: 13px; color: var(--text-muted); margin-bottom: 0.75rem; line-height: 1.5; }
+  .estudio-item { font-size: 13px; color: var(--text); font-weight: 500; margin-bottom: 4px; }
+  .estudio-item span { font-size: 12px; color: var(--text-muted); font-weight: 400; }
+  .disclaimer { font-size: 11px; color: var(--text-hint); font-style: italic; margin-top: 0.75rem; line-height: 1.5; border-top: 1px solid #f0d0c4; padding-top: 0.6rem; }
+  select option { font-size: 14px; }
+  @media (max-width: 360px) { .row { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="wrapper">
 
+  <div class="header">
+    <div class="header-top">
+      <div class="logo-circle">AL</div>
+      <div>
+        <h1>Formulario — Visa Americana</h1>
+        <p>ALPATUR Viajes · Completá solo lo que sabés</p>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="prog" style="width:11.1%"></div></div>
+    <div class="progress-labels">
+      <span id="step-label">Sección 1 de 9</span>
+      <span id="step-name">Datos personales</span>
+    </div>
+  </div>
+
+  <div class="dots" id="dots"></div>
+
+  <div class="card">
+    <div id="sections">
+
+      <!-- S1: DATOS PERSONALES -->
+      <div class="section active" data-name="Datos personales">
+        <div class="section-title"><i class="ti ti-user"></i> Datos personales</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="info-box"><i class="ti ti-info-circle"></i> Escribí los datos tal como aparecen en el pasaporte.</div>
+        <div class="row">
+          <div class="field"><label>Apellidos</label><input type="text" id="apellidos" placeholder="Como en el pasaporte"></div>
+          <div class="field"><label>Nombres</label><input type="text" id="nombres" placeholder="Como en el pasaporte"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Sexo</label>
+            <select id="sexo"><option value="">— elegir —</option><option>Femenino</option><option>Masculino</option></select>
+          </div>
+          <div class="field"><label>Fecha de nacimiento</label><input type="date" id="fnac"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Ciudad de nacimiento</label><input type="text" id="ciudad_nac"></div>
+          <div class="field"><label>País de nacimiento</label><input type="text" id="pais_nac" value="Paraguay"></div>
+        </div>
+        <div class="field"><label>Nacionalidad</label><input type="text" id="nacionalidad" value="Paraguaya"></div>
+        <div class="field"><label>Número de Cédula de Identidad</label><input type="text" id="cedula" placeholder="Solo números, sin puntos ni guiones"></div>
+        <div class="field">
+          <label>Estado civil</label>
+          <select id="estado_civil" onchange="chkEstadoCivil()">
+            <option value="">— elegir —</option>
+            <option>Soltero/a</option>
+            <option>Casado/a</option>
+            <option>Unión civil / Concubinato</option>
+            <option>Separado/a</option>
+            <option>Divorciado/a</option>
+            <option>Viudo/a</option>
+          </select>
+        </div>
+        <div id="cond_fecha_sep" style="display:none; padding: 0.75rem 1rem 0.25rem; border-left: 3px solid var(--terracota); margin-bottom: 0.75rem; background: var(--terracota-light); border-radius: 0 10px 10px 0;">
+          <div class="field"><label id="label_fecha_sep">Fecha</label><input type="date" id="fecha_sep"></div>
+        </div>
+        <div class="info-box" id="aviso-conyuge" style="display:none; background:#fff3ee; color:#c0522a;">
+          <i class="ti ti-arrow-right"></i> En la siguiente sección completás los datos de tu cónyuge/pareja.
+        </div>
+      </div>
+
+      <!-- S2: CÓNYUGE -->
+      <div class="section" data-name="Cónyuge / pareja">
+        <div class="section-title"><i class="ti ti-heart"></i> Cónyuge / pareja</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="info-box"><i class="ti ti-info-circle"></i> Si no tenés pareja o no aplica, tocá "Siguiente" para continuar.</div>
+        <div class="field"><label>Nombre completo</label><input type="text" id="conyuge_nombre"></div>
+        <div class="row">
+          <div class="field"><label>Fecha de nacimiento</label><input type="date" id="conyuge_fnac"></div>
+          <div class="field"><label>Ciudad de nacimiento</label><input type="text" id="conyuge_ciudad_nac"></div>
+        </div>
+        <div class="field"><label>País de nacimiento</label><input type="text" id="conyuge_pais_nac" value="Paraguay"></div>
+        <div class="field"><label>Fecha de matrimonio / unión</label><input type="date" id="fecha_matrimonio"></div>
+        <div class="field">
+          <label>¿La dirección del cónyuge es la misma que la tuya?</label>
+          <select id="conyuge_dir"><option value="">— elegir —</option><option>Sí, misma dirección</option><option>No, dirección diferente</option></select>
+        </div>
+      </div>
+
+      <!-- S3: DIRECCIÓN Y CONTACTO -->
+      <div class="section" data-name="Dirección y contacto">
+        <div class="section-title"><i class="ti ti-map-pin"></i> Dirección y contacto</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="field"><label>Dirección de residencia</label><input type="text" id="direccion" placeholder="Calle, número, barrio"></div>
+        <div class="row">
+          <div class="field"><label>Ciudad</label><input type="text" id="ciudad" value="Ciudad del Este"></div>
+          <div class="field"><label>Departamento</label><input type="text" id="dpto" value="Alto Paraná"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Código Postal</label><input type="text" id="cp" placeholder="ej: 7000"></div>
+          <div class="field"><label>País</label><input type="text" id="pais" value="Paraguay"></div>
+        </div>
+        <hr class="divider">
+        <div class="field"><label>Teléfono principal</label><input type="tel" id="tel1" placeholder="+595 9..."></div>
+        <div class="field"><label>Teléfono secundario<span class="badge-skip">opcional</span></label><input type="tel" id="tel2" placeholder="+595 9..."></div>
+        <div class="field"><label>Teléfono del trabajo<span class="badge-skip">si aplica</span></label><input type="tel" id="tel_trabajo"></div>
+        <div class="field"><label>Correo electrónico</label><input type="email" id="email" placeholder="ejemplo@correo.com"></div>
+        <hr class="divider">
+        <div class="section-title" style="margin-bottom:0.75rem"><i class="ti ti-brand-instagram"></i> Redes sociales</div>
+        <div class="toggle-wrap">
+          <input type="checkbox" id="chk_redes" onchange="toggleEl('cond_redes',this.checked)">
+          <label for="chk_redes">Tengo presencia en redes sociales</label>
+        </div>
+        <div class="conditional" id="cond_redes">
+          <div id="redes-list">
+            <div class="repeatable-item">
+              <div class="row">
+                <div class="field"><label>Plataforma</label><input type="text" placeholder="Instagram, Facebook, X..."></div>
+                <div class="field"><label>Usuario</label><input type="text" placeholder="@usuario"></div>
+              </div>
+            </div>
+          </div>
+          <button class="add-btn" type="button" onclick="addItem('redes-list', redTemplate)"><i class="ti ti-plus"></i> Agregar otra red</button>
+        </div>
+      </div>
+
+      <!-- S4: PASAPORTE -->
+      <div class="section" data-name="Pasaporte">
+        <div class="section-title"><i class="ti ti-id"></i> Pasaporte</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="info-box"><i class="ti ti-camera"></i> Esta sección la completamos nosotros con la foto del pasaporte. Si la tenés a mano, podés completarla.</div>
+        <div class="row">
+          <div class="field"><label>Tipo de pasaporte</label>
+            <select id="pas_tipo"><option value="">— elegir —</option><option>Regular</option><option>Oficial</option><option>Diplomático</option></select>
+          </div>
+          <div class="field"><label>Número</label><input type="text" id="pas_num" placeholder="A000000"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Fecha de emisión</label><input type="date" id="pas_emision"></div>
+          <div class="field"><label>Fecha de vencimiento</label><input type="date" id="pas_venc"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Ciudad de emisión</label><input type="text" id="pas_ciudad" value="Asunción"></div>
+          <div class="field"><label>País emisor</label><input type="text" id="pas_pais" value="Paraguay"></div>
+        </div>
+        <div class="field"><label>¿Alguna vez perdió o le robaron un pasaporte?</label>
+          <select id="pas_perdido"><option value="">— elegir —</option><option>No</option><option>Sí</option></select>
+        </div>
+      </div>
+
+      <!-- S5: FOTO -->
+      <div class="section" data-name="Foto para la visa">
+        <div class="section-title"><i class="ti ti-camera"></i> Foto para la visa</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Esta sección es informativa. Leela antes de sacar tu foto.</div>
+        <div class="foto-box">
+          <h3>Requisitos oficiales de la foto</h3>
+          <ul>
+            <li>En color, tomada en los últimos 6 meses</li>
+            <li>Fondo blanco liso o blanquecino</li>
+            <li>De frente, mirando directamente a la cámara</li>
+            <li>Expresión facial neutra, ambos ojos abiertos</li>
+            <li>Sin sombrero ni cobertura para la cabeza (salvo motivos religiosos cotidianos)</li>
+            <li>Sin auriculares ni dispositivos manos libres</li>
+            <li>Sin anteojos (salvo prescripción médica certificada)</li>
+            <li>Con ropa de uso diario, sin uniformes</li>
+            <li>La cabeza debe ocupar entre el 50% y el 69% de la altura total de la imagen</li>
+          </ul>
+        </div>
+        <div class="foto-estudios">
+          <p class="titulo">Estudios fotográficos sugeridos</p>
+          <p class="pedido">Al sacar la foto solicitá: <strong>copia digital enviada a tu correo</strong> + <strong>foto impresa</strong> para presentar en la embajada.</p>
+          <div class="estudio-item">📍 Magicolor <span>— Ciudad del Este</span></div>
+          <div class="estudio-item">📍 Rochester <span>— Asunción</span></div>
+          <p class="disclaimer">⚠️ Estas sugerencias no son publicidad ni representan ningún acuerdo comercial con ALPATUR Viajes. Son estudios con los que sabemos que trabajan bien para fotos de visa.</p>
+        </div>
+      </div>
+
+      <!-- S6: VIAJE -->
+      <div class="section" data-name="Información del viaje">
+        <div class="section-title"><i class="ti ti-plane"></i> Información del viaje</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="field"><label>Propósito del viaje</label>
+          <select id="viaje_prop"><option value="">— elegir —</option><option>Turismo</option><option>Negocios</option><option>Visita familiar</option><option>Estudio</option><option>Otro</option></select>
+        </div>
+        <div class="row">
+          <div class="field"><label>Fecha de llegada prevista</label><input type="date" id="viaje_llegada"></div>
+          <div class="field"><label>Duración estimada</label><input type="text" id="viaje_dur" placeholder="ej: 10 días"></div>
+        </div>
+        <div class="field"><label>Dirección del hospedaje en EE.UU.</label><input type="text" id="viaje_hosp" placeholder="Hotel, Airbnb, casa familiar..."></div>
+        <div class="field"><label>Ciudad y estado del hospedaje</label><input type="text" id="viaje_ciudad_hosp" placeholder="New York, NY 10036"></div>
+        <div class="field"><label>¿Quién paga el viaje?</label>
+          <select id="viaje_pago"><option value="">— elegir —</option><option>Yo mismo/a</option><option>Familiar</option><option>Empresa / empleador</option><option>Otro</option></select>
+        </div>
+        <hr class="divider">
+        <div class="toggle-wrap">
+          <input type="checkbox" id="chk_acomp" onchange="toggleEl('cond_acomp',this.checked)">
+          <label for="chk_acomp">Viajo acompañado/a</label>
+        </div>
+        <div class="conditional" id="cond_acomp">
+          <div id="acomp-list">
+            <div class="repeatable-item">
+              <div class="field"><label>Nombre completo</label><input type="text" placeholder="Nombre del acompañante"></div>
+              <div class="field"><label>Relación</label><input type="text" placeholder="Cónyuge, hijo/a, amigo/a..."></div>
+            </div>
+          </div>
+          <button class="add-btn" type="button" onclick="addItem('acomp-list', acompTemplate)"><i class="ti ti-plus"></i> Agregar acompañante</button>
+        </div>
+        <hr class="divider">
+        <div class="toggle-wrap">
+          <input type="checkbox" id="chk_visaant" onchange="toggleEl('cond_visaant',this.checked)">
+          <label for="chk_visaant">Ya estuve en EE.UU. antes o tengo visa anterior</label>
+        </div>
+        <div class="conditional" id="cond_visaant">
+          <div id="eeuu-list">
+            <div class="repeatable-item">
+              <div class="row">
+                <div class="field"><label>Fecha de llegada</label><input type="date"></div>
+                <div class="field"><label>Duración de la estadía</label><input type="text" placeholder="ej: 15 días"></div>
+              </div>
+            </div>
+          </div>
+          <button class="add-btn" type="button" onclick="addItem('eeuu-list', eeuuTemplate)"><i class="ti ti-plus"></i> Agregar otra visita</button>
+          <div class="field" style="margin-top:0.75rem"><label>Número de visa anterior<span class="badge-skip">si recuerda</span></label><input type="text" id="visa_num"></div>
+          <p class="hint">Si tenés la visa anterior, envianos una foto por WhatsApp.</p>
+        </div>
+        <div class="field" style="margin-top:0.75rem">
+          <label>¿Alguna vez le negaron una visa o el ingreso a EE.UU.?</label>
+          <select id="visa_negada"><option value="">— elegir —</option><option>No</option><option>Sí</option></select>
+        </div>
+        <div class="field">
+          <label>¿Alguien presentó una petición migratoria en su nombre ante USCIS?</label>
+          <select id="peticion_uscis"><option value="">— elegir —</option><option>No</option><option>Sí</option></select>
+        </div>
+      </div>
+
+      <!-- S7: CONTACTO EN EE.UU. -->
+      <div class="section" data-name="Contacto en EE.UU.">
+        <div class="section-title"><i class="ti ti-building"></i> Contacto en EE.UU.</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="info-box"><i class="ti ti-info-circle"></i> Si no tenés contacto en EE.UU., dejá esta sección en blanco. Lo completamos con los datos del hotel.</div>
+        <div class="field"><label>Nombre de la persona o empresa</label><input type="text" id="contacto_nombre"></div>
+        <div class="field"><label>Relación con vos</label><input type="text" id="contacto_rel" placeholder="Familiar, amigo/a, empresa..."></div>
+        <div class="field"><label>Dirección en EE.UU.</label><input type="text" id="contacto_dir"></div>
+        <div class="row">
+          <div class="field"><label>Teléfono</label><input type="tel" id="contacto_tel" placeholder="+1..."></div>
+          <div class="field"><label>Correo electrónico</label><input type="email" id="contacto_email"></div>
+        </div>
+      </div>
+
+      <!-- S8: FAMILIA -->
+      <div class="section" data-name="Información familiar">
+        <div class="section-title"><i class="ti ti-users"></i> Información familiar</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="row">
+          <div class="field"><label>Apellidos del padre</label><input type="text" id="padre_ap"></div>
+          <div class="field"><label>Nombres del padre</label><input type="text" id="padre_nom"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Fecha de nac. del padre</label><input type="date" id="padre_fnac"></div>
+          <div class="field"><label>¿Está en EE.UU.?</label>
+            <select id="padre_eeuu"><option value="">—</option><option>No</option><option>Sí</option><option>No sé</option></select>
+          </div>
+        </div>
+        <hr class="divider">
+        <div class="row">
+          <div class="field"><label>Apellidos de la madre</label><input type="text" id="madre_ap"></div>
+          <div class="field"><label>Nombres de la madre</label><input type="text" id="madre_nom"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Fecha de nac. de la madre</label><input type="date" id="madre_fnac"></div>
+          <div class="field"><label>¿Está en EE.UU.?</label>
+            <select id="madre_eeuu"><option value="">—</option><option>No</option><option>Sí</option><option>No sé</option></select>
+          </div>
+        </div>
+        <hr class="divider">
+        <div class="toggle-wrap">
+          <input type="checkbox" id="chk_parientes" onchange="toggleEl('cond_parientes',this.checked)">
+          <label for="chk_parientes">Tengo parientes en EE.UU. (hermanos, hijos, primos, tíos...)</label>
+        </div>
+        <div class="conditional" id="cond_parientes">
+          <div id="parientes-list">
+            <div class="repeatable-item">
+              <div class="field"><label>Nombre completo</label><input type="text" placeholder="Nombre del pariente"></div>
+              <div class="field"><label>Relación</label><input type="text" placeholder="Hermano/a, hijo/a, primo/a..."></div>
+              <div class="field"><label>Estado migratorio</label>
+                <select><option value="">— elegir —</option><option>Ciudadano americano</option><option>Residente permanente</option><option>No sé</option></select>
+              </div>
+              <div class="field"><label>Teléfono</label><input type="tel" placeholder="+1..."></div>
+              <div class="field"><label>Correo electrónico</label><input type="email" placeholder="correo@ejemplo.com"></div>
+              <div class="field"><label>Dirección en EE.UU.</label><input type="text" placeholder="Calle, ciudad, estado"></div>
+            </div>
+          </div>
+          <button class="add-btn" type="button" onclick="addItem('parientes-list', parienteTemplate)"><i class="ti ti-plus"></i> Agregar otro pariente</button>
+        </div>
+      </div>
+
+      <!-- S9: TRABAJO Y EDUCACIÓN -->
+      <div class="section" data-name="Trabajo y educación">
+        <div class="section-title"><i class="ti ti-briefcase"></i> Trabajo y educación</div>
+        <div class="consulta-box"><i class="ti ti-message-circle"></i> Completá solo lo que sabés. Si tenés dudas, consultanos antes de continuar.</div>
+        <div class="field"><label>Ocupación principal</label>
+          <select id="ocupacion">
+            <option value="">— elegir —</option>
+            <option>Empleado/a en relación de dependencia</option>
+            <option>Independiente / cuentapropista</option>
+            <option>Empresario/a / dueño/a de empresa</option>
+            <option>Estudiante</option>
+            <option>Jubilado/a / Pensionado/a</option>
+            <option>Ama/o de casa</option>
+            <option>Desempleado/a</option>
+            <option>Otro</option>
+          </select>
+        </div>
+        <div class="field"><label>Especificar<span class="badge-skip">si aplica</span></label><input type="text" id="ocup_otro" placeholder="ej: Docente universitaria, arquitecta..."></div>
+        <div class="field"><label>Nombre del empleador o institución</label><input type="text" id="empleador"></div>
+        <div class="field"><label>Dirección del trabajo</label><input type="text" id="trabajo_dir"></div>
+        <div class="row">
+          <div class="field"><label>Ciudad</label><input type="text" id="trabajo_ciudad"></div>
+          <div class="field"><label>Fecha de inicio</label><input type="date" id="trabajo_inicio"></div>
+        </div>
+        <div class="row">
+          <div class="field"><label>Teléfono del trabajo</label><input type="tel" id="trabajo_tel"></div>
+          <div class="field"><label>Salario mensual (Gs.)</label><input type="text" id="salario" placeholder="ej: 5.000.000"></div>
+        </div>
+        <div class="field"><label>Descripción breve de funciones</label><textarea id="funciones" placeholder="En pocas palabras, ¿qué hacés en tu trabajo o estudio?"></textarea></div>
+        <hr class="divider">
+        <div class="section-title" style="margin-bottom:0.75rem"><i class="ti ti-school"></i> Educación</div>
+        <div class="field"><label>Nombre de la institución</label><input type="text" id="edu_nombre"></div>
+        <div class="field"><label>Carrera o título</label><input type="text" id="edu_carrera"></div>
+        <div class="row">
+          <div class="field"><label>Desde</label><input type="date" id="edu_desde"></div>
+          <div class="field"><label>Hasta</label><input type="date" id="edu_hasta"></div>
+        </div>
+        <hr class="divider">
+        <div class="section-title" style="margin-bottom:0.75rem"><i class="ti ti-world"></i> Idiomas y viajes</div>
+        <div class="field"><label>Idiomas que habla</label><input type="text" id="idiomas" placeholder="Español, Guaraní, Inglés..."></div>
+        <div class="toggle-wrap">
+          <input type="checkbox" id="chk_viajes" onchange="toggleEl('cond_viajes',this.checked)">
+          <label for="chk_viajes">Viajé a otros países en los últimos 5 años</label>
+        </div>
+        <div class="conditional" id="cond_viajes">
+          <div class="field"><label>Países visitados</label><input type="text" id="paises" placeholder="Argentina, Brasil, Chile..."></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="nav" id="nav-btns">
+    <button class="btn" id="btn-back" onclick="navStep(-1)" disabled>← Atrás</button>
+    <button class="btn btn-primary" id="btn-next" onclick="navStep(1)">Siguiente →</button>
+  </div>
+
+  <p class="footer-note">Ningún campo es obligatorio · Completá solo lo que sabés<br>Cualquier dato adicional te lo consultamos directamente</p>
+
+  <div id="done-screen" style="display:none" class="card">
+    <div class="success">
+      <i class="ti ti-circle-check"></i>
+      <h2>¡Gracias por completar el formulario!</h2>
+      <p>Tus datos fueron recibidos por ALPATUR Viajes.<br>Nos ponemos en contacto a la brevedad para continuar con el trámite de tu visa.</p>
+      <br>
+      <p style="font-size:12px; color:#aaa;">Si necesitás corregir algo o tenés alguna duda, escribinos por WhatsApp.</p>
+    </div>
+  </div>
+
+</div>
+
+<script>
+const sections = document.querySelectorAll('.section');
+const names = [...sections].map(s => s.dataset.name);
+let current = 0;
+
+function buildDots() {
+  const c = document.getElementById('dots');
+  names.forEach((n, i) => {
+    const d = document.createElement('button');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.title = n; d.setAttribute('aria-label', n);
+    d.onclick = () => goTo(i);
+    c.appendChild(d);
+  });
+}
+
+function updateUI() {
+  const total = sections.length;
+  document.getElementById('prog').style.width = ((current + 1) / total * 100) + '%';
+  document.getElementById('step-label').textContent = 'Sección ' + (current + 1) + ' de ' + total;
+  document.getElementById('step-name').textContent = names[current];
+  document.getElementById('btn-back').disabled = current === 0;
+  document.getElementById('btn-next').textContent = current === total - 1 ? 'Enviar ✓' : 'Siguiente →';
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.className = 'dot' + (i < current ? ' done' : '') + (i === current ? ' active' : '');
+  });
+}
+
+function goTo(n) {
+  sections[current].classList.remove('active');
+  current = n;
+  sections[current].classList.add('active');
+  updateUI();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function navStep(dir) {
+  if (current + dir < 0) return;
+  if (current + dir >= sections.length) { finish(); return; }
+  goTo(current + dir);
+}
+
+function finish() {
+  document.querySelector('.card').style.display = 'none';
+  document.getElementById('nav-btns').style.display = 'none';
+  document.querySelector('.footer-note').style.display = 'none';
+  document.getElementById('done-screen').style.display = 'block';
+  document.getElementById('dots').style.display = 'none';
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function toggleEl(id, show) {
+  document.getElementById(id).classList.toggle('visible', show);
+}
+
+function chkEstadoCivil() {
+  const v = document.getElementById('estado_civil').value;
+  const tieneConyuge = ['Casado/a','Unión civil / Concubinato','Separado/a','Divorciado/a','Viudo/a'].includes(v);
+  const tieneFecha = ['Separado/a','Divorciado/a','Viudo/a'].includes(v);
+  document.getElementById('aviso-conyuge').style.display = tieneConyuge ? 'flex' : 'none';
+  document.getElementById('cond_fecha_sep').style.display = tieneFecha ? 'block' : 'none';
+  if (tieneFecha) {
+    const labels = { 'Separado/a': 'Fecha de separación', 'Divorciado/a': 'Fecha de divorcio', 'Viudo/a': 'Fecha de fallecimiento del cónyuge' };
+    document.getElementById('label_fecha_sep').textContent = labels[v];
+  }
+}
+
+function makeRemoveBtn(listId, item) {
+  const btn = document.createElement('button');
+  btn.type = 'button';
+  btn.className = 'remove-btn';
+  btn.innerHTML = '<i class="ti ti-x"></i>';
+  btn.title = 'Eliminar';
+  btn.onclick = () => {
+    const list = document.getElementById(listId);
+    if (list.children.length > 1) item.remove();
+  };
+  item.appendChild(btn);
+}
+
+function addItem(listId, templateFn) {
+  const list = document.getElementById(listId);
+  const item = document.createElement('div');
+  item.className = 'repeatable-item';
+  item.innerHTML = templateFn();
+  list.appendChild(item);
+  makeRemoveBtn(listId, item);
+}
+
+function redTemplate() {
+  return '<div class="row"><div class="field"><label>Plataforma</label><input type="text" placeholder="Instagram, Facebook, X..."></div><div class="field"><label>Usuario</label><input type="text" placeholder="@usuario"></div></div>';
+}
+function acompTemplate() {
+  return '<div class="field"><label>Nombre completo</label><input type="text" placeholder="Nombre del acompañante"></div><div class="field"><label>Relación</label><input type="text" placeholder="Cónyuge, hijo/a, amigo/a..."></div>';
+}
+function eeuuTemplate() {
+  return '<div class="row"><div class="field"><label>Fecha de llegada</label><input type="date"></div><div class="field"><label>Duración de la estadía</label><input type="text" placeholder="ej: 15 días"></div></div>';
+}
+function parienteTemplate() {
+  return '<div class="field"><label>Nombre completo</label><input type="text" placeholder="Nombre del pariente"></div><div class="field"><label>Relación</label><input type="text" placeholder="Hermano/a, hijo/a, primo/a..."></div><div class="field"><label>Estado migratorio</label><select><option value="">— elegir —</option><option>Ciudadano americano</option><option>Residente permanente</option><option>No sé</option></select></div><div class="field"><label>Teléfono</label><input type="tel" placeholder="+1..."></div><div class="field"><label>Correo electrónico</label><input type="email" placeholder="correo@ejemplo.com"></div><div class="field"><label>Dirección en EE.UU.</label><input type="text" placeholder="Calle, ciudad, estado"></div>';
+}
+
+buildDots();
+updateUI();
+</script>
+</body>
+</html>
