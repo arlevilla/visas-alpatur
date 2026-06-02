@@ -488,13 +488,96 @@ function navStep(dir) {
   goTo(current + dir);
 }
 
+function getVal(id) {
+  var el = document.getElementById(id);
+  return el ? el.value : '';
+}
+
+function getRepeatableText(listId, fields) {
+  var items = [];
+  var list = document.getElementById(listId);
+  if (!list) return '';
+  var rows = list.querySelectorAll('.repeatable-item');
+  rows.forEach(function(row) {
+    var inputs = row.querySelectorAll('input, select');
+    var vals = [];
+    inputs.forEach(function(inp) { if (inp.value) vals.push(inp.value); });
+    if (vals.length) items.push(vals.join(' | '));
+  });
+  return items.join(' // ');
+}
+
 function finish() {
-  document.querySelector('.card').style.display = 'none';
-  document.getElementById('nav-btns').style.display = 'none';
-  document.querySelector('.footer-note').style.display = 'none';
-  document.getElementById('done-screen').style.display = 'block';
-  document.getElementById('dots').style.display = 'none';
-  window.scrollTo({ top: 0, behavior: 'smooth' });
+  var btn = document.getElementById('btn-next');
+  btn.textContent = 'Enviando...';
+  btn.disabled = true;
+
+  var data = {
+    apellidos: getVal('apellidos'), nombres: getVal('nombres'),
+    sexo: getVal('sexo'), fnac: getVal('fnac'),
+    ciudad_nac: getVal('ciudad_nac'), pais_nac: getVal('pais_nac'),
+    nacionalidad: getVal('nacionalidad'), cedula: getVal('cedula'),
+    estado_civil: getVal('estado_civil'), fecha_sep: getVal('fecha_sep'),
+    conyuge_nombre: getVal('conyuge_nombre'), conyuge_fnac: getVal('conyuge_fnac'),
+    conyuge_ciudad_nac: getVal('conyuge_ciudad_nac'), conyuge_pais_nac: getVal('conyuge_pais_nac'),
+    fecha_matrimonio: getVal('fecha_matrimonio'), conyuge_dir: getVal('conyuge_dir'),
+    direccion: getVal('direccion'), ciudad: getVal('ciudad'),
+    dpto: getVal('dpto'), cp: getVal('cp'), pais: getVal('pais'),
+    tel1: getVal('tel1'), tel2: getVal('tel2'),
+    tel_trabajo: getVal('tel_trabajo'), email: getVal('email'),
+    red1_plat: getVal('red1_plat') || '', red1_user: getVal('red1_user') || '',
+    red2_plat: getVal('red2_plat') || '', red2_user: getVal('red2_user') || '',
+    pas_tipo: getVal('pas_tipo'), pas_num: getVal('pas_num'),
+    pas_emision: getVal('pas_emision'), pas_venc: getVal('pas_venc'),
+    pas_ciudad: getVal('pas_ciudad'), pas_pais: getVal('pas_pais'),
+    pas_perdido: getVal('pas_perdido'),
+    viaje_prop: getVal('viaje_prop'), viaje_llegada: getVal('viaje_llegada'),
+    viaje_dur: getVal('viaje_dur'), viaje_hosp: getVal('viaje_hosp'),
+    viaje_ciudad_hosp: getVal('viaje_ciudad_hosp'), viaje_pago: getVal('viaje_pago'),
+    acompanantes: getRepeatableText('acomp-list'),
+    visitas_eeuu: getRepeatableText('eeuu-list'),
+    visa_num: getVal('visa_num'),
+    visa_negada: getVal('visa_negada'), peticion_uscis: getVal('peticion_uscis'),
+    contacto_nombre: getVal('contacto_nombre'), contacto_rel: getVal('contacto_rel'),
+    contacto_dir: getVal('contacto_dir'), contacto_tel: getVal('contacto_tel'),
+    contacto_email: getVal('contacto_email'),
+    padre_ap: getVal('padre_ap'), padre_nom: getVal('padre_nom'),
+    padre_fnac: getVal('padre_fnac'), padre_eeuu: getVal('padre_eeuu'),
+    madre_ap: getVal('madre_ap'), madre_nom: getVal('madre_nom'),
+    madre_fnac: getVal('madre_fnac'), madre_eeuu: getVal('madre_eeuu'),
+    parientes: getRepeatableText('parientes-list'),
+    ocupacion: getVal('ocupacion'), ocup_otro: getVal('ocup_otro'),
+    empleador: getVal('empleador'), trabajo_dir: getVal('trabajo_dir'),
+    trabajo_ciudad: getVal('trabajo_ciudad'), trabajo_inicio: getVal('trabajo_inicio'),
+    trabajo_tel: getVal('trabajo_tel'), salario: getVal('salario'),
+    funciones: getVal('funciones'),
+    edu_nombre: getVal('edu_nombre'), edu_carrera: getVal('edu_carrera'),
+    edu_desde: getVal('edu_desde'), edu_hasta: getVal('edu_hasta'),
+    idiomas: getVal('idiomas'), paises: getVal('paises')
+  };
+
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz49SJkry8dHl_FFbotKXWExC3EM5Q1r9S7eKxBB2CrH8H3zsO4tz192Xp-zFKZZ_3S/exec';
+
+  fetch(SCRIPT_URL, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  }).then(function() {
+    document.querySelector('.card').style.display = 'none';
+    document.getElementById('nav-btns').style.display = 'none';
+    document.querySelector('.footer-note').style.display = 'none';
+    document.getElementById('done-screen').style.display = 'block';
+    document.getElementById('dots').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }).catch(function() {
+    document.querySelector('.card').style.display = 'none';
+    document.getElementById('nav-btns').style.display = 'none';
+    document.querySelector('.footer-note').style.display = 'none';
+    document.getElementById('done-screen').style.display = 'block';
+    document.getElementById('dots').style.display = 'none';
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  });
 }
 
 function toggleEl(id, show) {
